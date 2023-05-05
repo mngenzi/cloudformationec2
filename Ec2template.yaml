@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: > 
+  "Ec2 Template launched in default vpc us-west-1-region"
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: us-west-1a
+      ImageId: ami-0127b2e6f3b9b94d5 # AMI ID
+      InstanceType: t2.micro
+      Tags: 
+        - Key: "Name"
+          Value: "ec2-by-Marius"
