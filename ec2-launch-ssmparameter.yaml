@@ -1,0 +1,19 @@
+Parameters:
+  InstanceTypeParameter:
+    Type: 'AWS::SSM::Parameter::Value<String>' #go to parameter store
+    Default: /myEC2Instance/type #retrieve value associated with this
+    
+
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:          
+      ImageId: ami-04e914639d0cca79a # AMI ID
+      InstanceType: !Ref InstanceTypeParameter      
+      KeyName: OR_key
+      SecurityGroupIds: 
+        - sg-026ceb24592dff320
+      SubnetId: subnet-0ecc1292524fb5dda
+      Tags: 
+        - Key: "Name"
+          Value: "ec2-CF"

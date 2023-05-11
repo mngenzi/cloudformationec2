@@ -11,7 +11,7 @@ Resources:
   MyEC2Instance:
     Type: AWS::EC2::Instance
     Properties:          
-      ImageId: !FindInMap [RegionMappings, "us-west-2", Linux] # AMI ID
+      ImageId: !FindInMap [RegionMappings, "us-east-1", UbuntuLTS] # AMI ID
       InstanceType: t2.micro      
       KeyName: OR_key
       SecurityGroupIds: 
