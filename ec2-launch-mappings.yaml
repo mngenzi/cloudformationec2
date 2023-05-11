@@ -1,0 +1,23 @@
+Mappings: 
+  RegionMappings: #mapping AMI family based on the region and AMI family
+    us-west-2: 
+      Linux: ami-04e914639d0cca79a
+      UbuntuLTS: ami-0fcf52bcf5db7b003
+    us-east-1: 
+      Linux: ami-0889a44b331db0194
+      UbuntuLTS: ami-007855ac798b5175e
+
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:          
+      ImageId: !FindInMap [RegionMappings, "us-west-2", Linux] # AMI ID
+      InstanceType: t2.micro      
+      KeyName: OR_key
+      SecurityGroupIds: 
+        - sg-026ceb24592dff320
+      SubnetId: subnet-0ecc1292524fb5dda
+      Tags: 
+        - Key: "Name"
+          Value: "ec2-CF"      
+    
