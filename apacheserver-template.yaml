@@ -1,0 +1,53 @@
+Parameters:
+  InstanceTypeParameter:
+    Type: String
+    Default: t3.nano
+    AllowedValues:
+      - t3.nano
+      - m1.small
+      - m1.large
+    Description: Enter t3.nano, m1.small, or m1.large. Default is t3.nano
+
+Mappings: 
+  RegionMappings: #mapping AMI family based on the region and AMI family
+    us-west-2: 
+      Linux: ami-04e914639d0cca79a
+    us-east-1: 
+      Linux: ami-0889a44b331db0194
+      
+
+Resources:  
+  MyEC2Instance: #logical id
+    Type: AWS::EC2::Instance
+    Properties:                           
+      ImageId: !FindInMap [RegionMappings, "us-west-2", Linux] # AMI ID
+      InstanceType: !Ref InstanceTypeParameter      
+      KeyName: OR_key      
+      SecurityGroupIds: 
+        - !ImportValue SampleNetworkCrossStack-SecurityGroupID
+      SubnetId: !ImportValue SampleNetworkCrossStack-SubnetID
+      UserData: 
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          yum install -y httpd
+          systemctl start httpd
+          systemctl enable httpd
+          echo "Launching this ec2 in region: ${AWS::Region}" > /var/www/html/index.html
+
+  MyEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref MyEC2Instance
+      Tags: 
+        - Key: "Name"
+          Value: "apache-server" 
+Outputs:
+  PrivateIpAddress: #logical ID of the output
+    Description: Returns value of prvt ip address
+    Value: !GetAtt MyEC2Instance.PrivateIp #this should return the private IP of this instance
+  PrivateDnsNameEc2: #logical ID of the output
+    Description: Returns value of prvt dns name
+    Value: !GetAtt MyEC2Instance.PrivateDnsName #this should return the private dns of this instance
+
+         
